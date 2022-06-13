@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+     <title>ToDos</title>
+     <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+     <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.25.0/babel.min.js"></script>
+</head>
+
+<body>
+
+     <div id="main"></div>
+     <script type="text/babel">
+
+
+
+          function MyApp() {
+               const [todos, setTodos] = React.useState([
+                    { id: 0, title:  'janatbakytova'}
+               ])
+               const [input, setInput] = React.useState('')
+               const [done, setDone] = React.useState([])
+
+               function todoHandler(event) {
+                    setInput(event.target.value)
+               }
+
+               function buttonClick() {
+                    setTodos([...todos, { id: Date.now(), title: input }])
+                    setInput("")
+               }
+
+               function todoDone(todo) {
+                    setDone([...done, todo])
+                    setTodos(todos.filter(td => td.id !== todo.id))
+               }
+
+               function statusHandler(todo) {
+                    setTodos([...todos, todo])
+                    setDone(done.filter(td => td.id !== todo.id))
+               }
+
+               return (
+                    <div>
+                         <input
+                              autoFocus
+                              type="text"
+                              value={input}
+                              onChange={todoHandler} />
+                         <button onClick={buttonClick}>Add</button>
+                         <hr />
+                         {todos.map((element) => <TodoItem todo={element} key={element.id} done={todoDone} />)}
+                         <hr />
+                         {done.map((elem) => <TodoItem todo={elem} key={elem.id} done={statusHandler} status={true} />)}
+                    </div>
+               )
+          }
+
+          function TodoItem({ todo, done, status = false }) {
+               return (<div onClick={() => done(todo)}>
+                    {status ? <s>{todo.title}</s> : todo.title}
+               </div>)
+          }
+
+          ReactDOM.render(<MyApp />, document.getElementById("main"))
+     </script>
+</body>
+
+</html>
